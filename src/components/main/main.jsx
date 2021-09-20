@@ -42,12 +42,12 @@ function Main() {
 
 
   const dispatch = useDispatch();
-  const history = useHistory();
+  const { push } = useHistory();
 
   useEffect(() => {
     if(Object.keys(dataUser).length)
-      history.push(`/r/${generateId(6)}`);
-  }, [dataUser]);
+      push(`/r/${generateId(6)}`);
+  }, [dataUser, push]);
 
   function handleChangeName(value) {
     setName(value);

@@ -15,7 +15,6 @@ import './profileCard.css';
 function ProfileCard(props) {
   let dataUser = useSelector(state => state?.userReducer?.user);
   let dataCard = useSelector(state => state?.cardReducer?.card);
-  console.log(dataCard);
   
   const [menuState, setMenuState] = useState(null);
   const openColorMenu = Boolean(menuState);
@@ -26,17 +25,17 @@ function ProfileCard(props) {
   const handleCloseColorPicker = () => {
     setMenuState(null);
   };
-  const history = useHistory();
+  const { push } = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
     if(dataUser && Object.keys(dataUser).length) localStorage.setItem('card', JSON.stringify(dataCard));
     const localDataUser = JSON.parse(localStorage.getItem('user'));
     const localDataCard = JSON.parse(localStorage.getItem('card'));
-    console.log(localDataUser)
+
     if(!dataUser || !Object.keys(dataUser).length) {
       if(!localDataUser || !Object.keys(localDataUser).length)
-        history.push('/')
+        push('/')
       else {
         if(localDataCard && Object.keys(localDataCard).length) {
           dispatch(setEmojiAction(localDataCard.emoji));
@@ -45,7 +44,7 @@ function ProfileCard(props) {
         dispatch(requestUserDataSuccess(localDataUser));
       }
     }
-  }, []);
+  }, [push, dataUser, dataCard, dispatch]);
 
   const contributors = dataUser?.contributors
     ? dataUser?.contributors.slice(0, 10).map((item) => {return {login: item.login, id: item.id};})
