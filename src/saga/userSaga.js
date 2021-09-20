@@ -6,15 +6,16 @@ import {
   requestUserDataSuccess,
   requestUserDataError,
 } from '../app/actions';
-import { fetchUserData } from '../utilities/api';
+import { fetchUserData, fetchContributorsData } from '../utilities/api';
 import actionTypes from '../app/actionTypes';
 
 function* fetchUserDataAsync(action) {
   try {
     yield put(requestUserData());
     const response = yield call(fetchUserData, action.data);
-    yield put(requestUserDataSuccess(response.data));
-    console.log(response.data);
+    const contributorsResponse = yield call(fetchContributorsData, response.data?.contributors_url ?? false);
+    localStorage.setItem('user', JSON.stringify({...response.data, contributors: contributorsResponse.data}));
+    yield put(requestUserDataSuccess({...response.data, contributors: contributorsResponse.data}));
   } catch (error) {
     yield put(requestUserDataError());
   }

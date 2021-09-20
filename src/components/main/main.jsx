@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from "react";
-import { useDispatch } from 'react-redux';
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
 import { SketchPicker } from 'react-color';
 import Picker from 'emoji-picker-react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import generateId from "../../utilities/generateId";
 
 import ProfileCard from '../profileCard/profileCard';
 
-import { fetchUserDataAction } from '../../app/actions';
+import { fetchUserDataAction, setEmojiAction, setColorAction } from '../../app/actions';
 
 function Main() {
   const [name, setName] = useState('');
@@ -20,8 +22,9 @@ function Main() {
   const [accountInfo, setAccountInfo] = useState({});
   const [color, setColor] = useState('#fff');
   const [chosenEmoji, setChosenEmoji] = useState(null);
-  const [colorState, setColorState] = React.useState(null);
+  const [colorState, setColorState] = useState(null);
   const openColorMenu = Boolean(colorState);
+  const dataUser = useSelector(state => state?.userReducer?.user);
 
   const handleClickColorPicker = (event) => {
     setColorState(event.currentTarget);
@@ -30,7 +33,7 @@ function Main() {
     setColorState(null);
   };
 
-  const [emojiState, setEmojiState] = React.useState(null);
+  const [emojiState, setEmojiState] = useState(null);
   const openEmojiMenu = Boolean(emojiState);
 
   const handleClickEmojiPicker = (event) => {
@@ -42,7 +45,12 @@ function Main() {
 
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
+  useEffect(() => {
+    if(Object.keys(dataUser).length)
+      history.push(`/r/${generateId(6)}`);
+  }, [dataUser]);
 
   function handleChangeName(value) {
     setName(value);
@@ -58,11 +66,12 @@ function Main() {
 
   const onEmojiClick = (event, emojiObject) => {
     setChosenEmoji(emojiObject);
+    dispatch(setEmojiAction(emojiObject));
   };
 
   function handleChangeComplete(color) {
     setColor(color.hex);
-    console.log(color.hex);
+    dispatch(setColorAction(color.hex));
   }
 
   const ErrorMessage = isError 
@@ -93,7 +102,10 @@ function Main() {
             'aria-labelledby': 'basic-button',
           }}
         >
-          <MenuItem onClick={handleCloseColorPicker}><SketchPicker color={ color } onChangeComplete={ handleChangeComplete } /></MenuItem>
+          <MenuItem><SketchPicker color={ color } onChangeComplete={ handleChangeComplete } /></MenuItem>
+          <Button
+            onClick={handleCloseColorPicker}
+          > Close </Button>
         </Menu>
         <Button
           id="basic-button"
@@ -113,11 +125,13 @@ function Main() {
             'aria-labelledby': 'basic-button',
           }}
         >
-          <MenuItem onClick={handleCloseEmojiPicker}><Picker onEmojiClick={onEmojiClick} /></MenuItem>
+          <MenuItem><Picker onEmojiClick={onEmojiClick} /></MenuItem>
+          <Button
+            onClick={handleCloseEmojiPicker}
+          > Close </Button>
         </Menu>
       </div>
       <Button variant="contained" color="primary" onClick={ handleClick } disabled={ !name || !repo }>{ isLoading ? 'Loading' : 'Generate!' }</Button>
-      <ProfileCard background={color} emoji={chosenEmoji ? chosenEmoji.emoji : null} />
     </div>
   );
 }

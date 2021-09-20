@@ -1,0 +1,10 @@
+.card__line {
+  font: 300 15px/20px Arial;
+  letter-spacing: -0.3px;
+}
+
+.card__star-button {
+  position: absolute;
+  bottom: 13px;
+  right: 20px;
+}

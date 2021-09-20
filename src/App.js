@@ -8,19 +8,17 @@ import {
 
 import './App.css';
 import Main from './components/main/main.jsx';
+import ProfileCard from './components/profileCard/profileCard.jsx';
 
 function App() {
   return (
-    // <div className="app-wrapper">
-    //   <Main />
-    // </div>
     <Router>
       <Switch>
-        <Route path="/about">
-          <div>About</div>
-        </Route>
-        <Route path="/">
+        <Route path="/" exact>
           <Main />
+        </Route>
+        <Route path="/r/:path">
+          <ProfileCard />
         </Route>
       </Switch>
     </Router>
