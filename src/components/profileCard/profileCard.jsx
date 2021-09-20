@@ -73,9 +73,7 @@ function ProfileCard(props) {
           anchorEl={menuState}
           open={openColorMenu}
           onClose={handleCloseColorPicker}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
+          MenuListProps={{ 'aria-labelledby': 'basic-button' }}
         >
           { contributors.map((item) => 
             <MenuItem key={ item.id }>{ item.login }</MenuItem>
