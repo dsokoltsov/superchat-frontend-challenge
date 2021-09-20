@@ -9,17 +9,14 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import generateId from "../../utilities/generateId";
 
-import ProfileCard from '../profileCard/profileCard';
 
 import { fetchUserDataAction, setEmojiAction, setColorAction } from '../../app/actions';
 
 function Main() {
   const [name, setName] = useState('');
   const [repo, setRepo] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [accountInfo, setAccountInfo] = useState({});
+  const isLoading = useSelector(state => state?.userReducer?.isLoading);
+  const isError = useSelector(state => state?.userReducer?.isError);
   const [color, setColor] = useState('#fff');
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [colorState, setColorState] = useState(null);
